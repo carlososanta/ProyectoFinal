@@ -95,7 +95,7 @@
                                             maximumFileSize="10"
                                             multiple="true"
                                             sameFilenameAllowed="true"
-                                            instantUpload="true"
+                                            instantUpload="false"
                                             uploadUrl="/sap/opu/odata/sap/ZEMPLOYEES_SRV/Attachments"
                                             change="onFileChange"
                                             uploadComplete="onFileUploadComplete"
@@ -108,7 +108,7 @@
         <footer>
             <OverflowToolbar >
                 <ToolbarSpacer/>
-                <Button type="Reject" text="{i18n>btnCancel}">
+                <Button type="Reject" text="{i18n>btnCancel}" press="onCacel">
 					<layoutData><OverflowToolbarLayoutData priority="NeverOverflow" /></layoutData>
 				</Button>
             </OverflowToolbar>
@@ -158,7 +158,7 @@
 								<Text text="{/Comments}"/>
 								<Label text="{i18n>lblDocuments}"/>
 								<Label></Label>
-                                <List items="{/_files}">
+                                <List items="{/items}">
                                     <items>
                                         <StandardListItem title="{DocName}"></StandardListItem>
                                     </items>

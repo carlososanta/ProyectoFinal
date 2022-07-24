@@ -1,0 +1,139 @@
+<mvc:View controllerName="logaligroup.finalproject.controller.ViewEmployee"
+    xmlns:mvc="sap.ui.core.mvc" 
+    xmlns="sap.m"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:core ="sap.ui.core"
+    xmlns:time="sap.suite.ui.commons"
+    >
+    	<SplitApp
+		id="SplitAppDemo">
+        <masterPages>
+			<Page
+				id="master"
+				title="{i18n>titleEmployees}"
+				backgroundDesign= "List">
+				<List id="employeesList"  items="{
+                                                        path: 'employeesModel>/Users', 
+                                                            filters:[
+                                                                    {path: 'SapId', 
+                                                                    operator: 'EQ',
+                                                                    value1: 'carlosasantamariag@gmail.com' 
+                                                                    }]
+                                                                
+                                                    }"
+                        itemPress="onItemPress" >
+					<StandardListItem   title="{employeesModel>FirstName} {employeesModel>LastName}" 
+                                        description="{employeesModel>Dni}" 
+                                        type="Active"  />
+				</List>
+			</Page>
+		</masterPages>
+		<detailPages>
+			<Page
+				id="detail"
+				title="Detail 1"
+				backgroundDesign= "Solid">
+                <FlexBox alignItems="Center" justifyContent="Center" height="100%" >
+                    <Label text="{i18n>lblItianlMessageSelect}" />    
+                </FlexBox>
+			</Page>
+			<Page
+				id="detailDetail"
+				title="{i18n>titleDetail}"
+				backgroundDesign= "Solid"
+				showNavButton="true"
+				navButtonPress=".onPressDetailBack">
+                <content>
+                    <ObjectHeader
+                         icon="{= ${employeesModel>Type} === '0' ? 'sap-icon://employee-pane' 
+                                                                : ${employeesModel>Type} === '1' ? 'sap-icon://employee'
+                                                                : 'sap-icon://leads' }"
+                        title="{employeesModel>FirstName} {employeesModel>LastName}"
+                        intro="{odataModel>Dni}"                
+                    >
+                        <attributes>
+                            <ObjectAttribute title="{i18n>lblCreationDate}" text="{path:'employeesModel>CreationDate',type:'sap.ui.model.type.Date'}" />
+                            <ObjectAttribute title="{i18n>lblType}" text="{= ${employeesModel>Type} === '0' ? ${i18n>intern} 
+                                                                            : ${employeesModel>Type} === '1' ? ${i18n>freelands}
+                                                                            : ${i18n>manager} }"                                                                      
+                                                                            />
+                            <ObjectAttribute title="{i18n>lblComment}" text="{employeesModel>Comments}" />
+                        </attributes>
+                    </ObjectHeader>
+                        <IconTabBar
+                        id="idIconTabBarMulti"
+                        class="sapUiResponsiveContentPadding">
+                        <items>
+                            <IconTabFilter icon="sap-icon://attachment" key="files" text="{i18n>iconFiles}">
+                                <UploadCollection id="uploadCollection"
+                                            maximumFilenameLength="55"
+                                            maximumFileSize="10"
+                                            multiple="true"
+                                            sameFilenameAllowed="true"
+                                            instantUpload="true"
+                                            uploadUrl="/sap/opu/odata/sap/ZEMPLOYEES_SRV/Attachments"
+                                            change="onFileChange"
+                                  uploadComplete="onFileUploadComplete"
+                                  beforeUploadStarts="onFileBeforeUpload"
+                                  fileDeleted="onFileDeleted"
+                                            items="{employeesModel>UserToAttachment}">
+                                            
+                                    <items>  
+                                        <UploadCollectionItem
+                                        documentId="{employeesModel>AttId}"
+                                        visibleEdit="false"
+                                        fileName="{employeesModel>DocName}"
+                                        press="onDownloadFile">
+                                    </UploadCollectionItem>
+                                    </items>
+                                </UploadCollection>
+                            </IconTabFilter>
+                            <IconTabFilter
+                                icon="sap-icon://money-bills"
+                                key="salary"
+                                text="{i18n>iconSalary}">
+                                <time:Timeline
+                                    id="idTimeline"
+                                    itemFiltering="onItemFiltering"
+                                    enableDoubleSided="true"
+                                    groupByType="Year"
+                                    groupBy="CreationDate"
+                                    textHeight="8"
+                                    sortOldestFirst="true"
+                                    height="100%"
+                                    content="{employeesModel>UserToSalary}"
+                                    >
+                                    <time:content>
+                                        <time:TimelineItem
+                                                id="idTemplateItem"
+                                                userNameClicked="onUserNameClick"
+                                                select="onPressItems"
+                                                dateTime="{path:'employeesModel>CreationDate',type:'sap.ui.model.type.Date'}"
+                                                userName ="{parts:[ {path:'employeesModel>Amount'},
+                                                                    {path:'employeesModel>Waers'}
+                                                                    ],
+												                type: 'sap.ui.model.type.Currency',
+												            formatOptions: {showMeasure: false}}"
+                                                text="{employeesModel>Comments}">
+                                            </time:TimelineItem>
+                                    </time:content>
+                                </time:Timeline>
+                            </IconTabFilter>
+                        </items>
+                    </IconTabBar>
+                </content>
+                <footer>
+            <OverflowToolbar >
+                <ToolbarSpacer/>
+                <Button text="{i18n>btnFiredUp}" press="onFiredUp">
+					<layoutData><OverflowToolbarLayoutData priority="NeverOverflow" /></layoutData>
+				</Button>
+                <Button text="{i18n>btnPromote}" press="onPromote">
+					<layoutData><OverflowToolbarLayoutData priority="NeverOverflow" /></layoutData>
+				</Button>
+            </OverflowToolbar>
+        </footer>
+			</Page>
+		</detailPages>		
+	</SplitApp>    
+</mvc:View>

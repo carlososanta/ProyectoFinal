@@ -1,0 +1,20 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:f="sap.ui.layout.form">
+    <Dialog title="{i18n>newPromote}">
+    <content>
+            <f:SimpleForm id="form" editable="true">                
+                <f:content>
+                    <Label text="{i18n>lblSalary}" labelFor="salary" />
+                    <Input id="salary" value="{promote>/Salary}"/>
+                    <Label text="{i18n>lblCreationDate}" labelFor="CreationDate" />
+                    <DatePicker  id="CreationDate" dateValue="{promote>/CreationDate}" required="true" />
+                    <Label text="{i18n>lblComment}" labelFor="comment" />
+                    <Input id="comment" value="{promote>/Comments}"/>
+                </f:content>
+            </f:SimpleForm>
+            </content>
+    <buttons>
+            <Button text="{i18n>btnOK}" press="onDialogOk"/>
+            <Button text="{i18n>btnCancel}" press="onDialogCancel"/>
+        </buttons>
+    </Dialog>
+</core:FragmentDefinition>

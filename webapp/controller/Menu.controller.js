@@ -24,6 +24,8 @@ function(Controller,MessageToast) {
 
     function onShowEmployee(oEvent){
         MessageToast.show("Show Employee");
+        const oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+        oRouter.navTo("RouteView");
     };
 
     Main.prototype.onInit = onInit;

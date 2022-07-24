@@ -87,11 +87,9 @@
         "preload": true,
         "settings": {
             "defaultOperationMode":"Server",
-            "defaultBindingMode": "TwoWay",
-            "defaultCountMode": "Request",
-            "refreshAfterChange": false,
-            "useBatch": false,
-            "defaultUpdateMethod": "Put"        
+            "defaultBindingMode": "OneWay",
+            "defaultCountMode": "Request"
+            
         }
       } 
     },
@@ -126,7 +124,14 @@
             "target": [
               "TergetCreate"
             ]
-          }
+          },
+          {
+              "name": "RouteView",
+              "pattern": "view",
+              "target": [
+                "TergetView"
+              ]
+            }
       ],
       "targets": {
         "menu": {
@@ -142,6 +147,13 @@
             "clearControlAggregation": true,
             "viewId": "CreateEmployee",
             "viewName": "CreateEmployee"
+          },
+          "TergetView": {
+            "viewType": "XML",
+            "transition": "slide",
+            "clearControlAggregation": true,
+            "viewId": "ViewEmployee",
+            "viewName": "ViewEmployee"
           }
       }
     },

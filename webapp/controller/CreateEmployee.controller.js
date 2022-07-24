@@ -18,6 +18,16 @@ sap.ui.define([
             this._oNavContainer = this.byId("wizardNavContainer");
 			this._oWizardContentPage = this.byId("wizardContentPage");
 
+
+            //Se reseta los pasos por si ya se ha ejecutado la aplicacion antes
+            var oFirstStep = this._wizard.getSteps()[0];
+            this._wizard.discardProgress(oFirstStep);
+            // scroll to top
+            this._wizard.goToStep(oFirstStep);
+            // invalidate first step
+            oFirstStep.setValidated(false);
+            //
+
             // modelo vacio
             this.model = new sap.ui.model.json.JSONModel({});
             this.getView().setModel(this.model);
@@ -94,12 +104,6 @@ sap.ui.define([
 
             this._wizard.validateStep(this.byId("EmployeeDataStep"));
 
-            // if (isNaN(weight)) {
-            // 	this._wizard.setCurrentStep(this.byId("EmployeeDataStep"));
-            // 	this.model.setProperty("/productWeightState", "Error");
-            // } else {
-            // 	this.model.setProperty("/productWeightState", "None");
-            // }
 
             if (firstName.length === 0) {
                 this._wizard.setCurrentStep(this.byId("EmployeeDataStep"));
@@ -188,6 +192,17 @@ sap.ui.define([
         };
 
         function wizardCompletedHandler() {
+            // recumeramos los archivos
+            var uploadCollection = this.byId("uploadCollection");
+            var items = uploadCollection.getItems();
+            this.model.setProperty("/countItmes",items.length);
+            var arrayItems = [];
+            for (let i in items) {
+                arrayItems.push({DocName:items[i].getFileName(),MimeType:items[i].getMimeType()})
+                
+            }
+             this.model.setProperty("/items",arrayItems)
+
 			this._oNavContainer.to(this.byId("wizardReviewPage"));
 		};
 
@@ -242,6 +257,7 @@ sap.ui.define([
                     this.newUser = data.EmployeeId;
                     this.onStartUpload();
                     MessageBox.success(oResourceBundle.getText("Save OK"));
+                    oncancel( );
                 }.bind(this),
                 error: function () {
                     MessageBox.error(oResourceBundle.getText("Not Save"));
@@ -260,6 +276,56 @@ sap.ui.define([
 			this._oNavContainer.backToPage(this._oWizardContentPage.getId());
 		};
 
+        function discardProgress() {
+			this._wizard.discardProgress(this.byId("EmployeeTypeStep"));
+
+			var clearContent = function (content) {
+				for (var i = 0; i < content.length; i++) {
+					if (content[i].setValue) {
+						content[i].setValue("");
+					}
+
+					if (content[i].getContent) {
+						clearContent(content[i].getContent());
+					}
+				}
+			};
+
+			this.model.setData({
+                Type:"interno",
+				FirstNameState: "Error",
+				LastNameState: "Error",
+				DniState: "Error"
+			});
+			clearContent(this._wizard.getSteps());
+		}
+
+        function onBeforeRendering(){
+            
+        };
+
+        function onCacel(){
+            this._handleNavigationToStep(0);
+            this._wizard.discardProgress(this._wizard.getSteps()[0]);
+            var clearContent = function (content) {
+				for (var i = 0; i < content.length; i++) {
+					if (content[i].setValue) {
+						content[i].setValue("");
+					}
+
+					if (content[i].getContent) {
+						clearContent(content[i].getContent());
+					}
+				}
+			};
+            clearContent(this._wizard.getSteps());
+            this.onInit( );
+            var wizardNavContainer = this.byId("wizardNavContainer");
+						wizardNavContainer.back();
+                        var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+						oRouter.navTo("menu",{},true);
+        };
+
         Main.prototype.onInit = onInit;
         Main.prototype.setEmployeeTypeFromSegmented = setEmployeeTypeFromSegmented;
         Main.prototype.onValidateDNI = onValidateDNI;
@@ -277,6 +343,9 @@ sap.ui.define([
         Main.prototype.onStartUpload = onStartUpload;
         Main.prototype.onFileBeforeUpload = onFileBeforeUpload;
         Main.prototype.downloadFile = downloadFile;
+        Main.prototype.discardProgress = discardProgress;
+        Main.prototype.onBeforeRendering = onBeforeRendering;
+        Main.prototype.onCacel = onCacel;
 
 
         return Main;
