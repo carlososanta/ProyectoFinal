@@ -1,0 +1,14 @@
+<mvc:View controllerName="logaligroup.finalproject.controller.App"
+    xmlns:mvc="sap.ui.core.mvc" displayBlock="true"
+    xmlns="sap.m">
+    <Shell id="Shell">
+        <App id="app">
+            <pages>
+                <Page id="page_add" title="{i18n>titlePage}">
+                <content>
+                </content>
+                </Page>
+            </pages>
+        </App>
+    </Shell>    
+</mvc:View>

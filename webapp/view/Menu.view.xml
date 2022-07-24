@@ -1,0 +1,26 @@
+<mvc:View
+    controllerName="logaligroup.finalproject.controller.Menu"
+    xmlns="sap.m"
+    xmlns:mvc="sap.ui.core.mvc"
+    displayBlock="true"
+>
+    <Page id="page" title="{i18n>titleMenu}">
+        <content>
+            <Panel headerText="{i18n>titleEmployees}"  expandable="true" expanded="true">
+                <GenericTile headerImage="sap-icon://add-employee" class="sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout" press="onCreateEmployee">
+                    <TileContent footer="{i18n>createEmployee}">
+                    </TileContent>
+                </GenericTile>
+                <GenericTile headerImage="sap-icon://employee-lookup" class="sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout" press="onShowEmployee">
+                    <TileContent footer="{i18n>showEmployee}">
+                    </TileContent>
+                </GenericTile>
+            </Panel>
+            <Panel headerText="{i18n>titleOrder}"  expandable="true" expanded="true">
+                <GenericTile >
+                </GenericTile>
+            </Panel>
+        </content>
+    </Page>
+
+</mvc:View>

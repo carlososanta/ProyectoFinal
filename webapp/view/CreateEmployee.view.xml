@@ -1,0 +1,182 @@
+<mvc:View xmlns:layout="sap.ui.layout" xmlns:internal="sap.landvisz.internal"
+    controllerName="logaligroup.finalproject.controller.CreateEmployee"
+    xmlns="sap.m"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:f="sap.ui.layout.form"
+    displayBlock="true"
+>
+    <NavContainer id="wizardNavContainer">
+			<pages>
+    <Page id="wizardContentPage"
+				showHeader="false">
+        <content>
+           <Wizard id="CreateEmployeeWizard" 
+								complete="wizardCompletedHandler">
+							<WizardStep id="EmployeeTypeStep"
+										title="{i18n>titleTypeStep}"
+										validated="true">
+                                        <MessageStrip class="sapUiSmallMarginBottom"
+										text="{i18n>informationTypeStep}"
+										showIcon="true"/>
+                                	<HBox
+										alignItems="Center"
+										justifyContent="Center"
+										width="100%">
+									<SegmentedButton
+										width="320px"
+										selectionChange="setEmployeeTypeFromSegmented">
+										<items>
+											<SegmentedButtonItem id="interno" text="{i18n>intern}"/>
+											<SegmentedButtonItem id="autonomo" text="{i18n>freelands}"/>
+											<SegmentedButtonItem id="gerente" text="{i18n>manager}"/>
+										</items>
+									</SegmentedButton>
+								</HBox>
+                            </WizardStep>
+                            <WizardStep id="EmployeeDataStep"
+										title="{i18n>titleDataStep}"
+										validated="false"
+                                        activate="additionalInfoValidation">
+                                        <MessageStrip class="sapUiSmallMarginBottom"
+										text="{i18n>informationDataStep}"
+										showIcon="true"/>
+                                        <f:SimpleForm id="SimpleFormChange354wide"
+                                    editable="true"
+                                    title="{i18n>titleDataStep}">
+                                    <f:content>
+                                        <Label text="{i18n>lblName}" />
+                                        <Input id="firstName" valueState="{/FirstNameState}" value="{/FirstName}" required="true" liveChange="additionalInfoValidation"/>
+                                        <Label text="{i18n>lblLastName}" />
+                                        <Input id="lastName" value="{/LastName}" valueState="{/LastNameState}" required="true" liveChange="additionalInfoValidation"/>
+                                        <Label text="{= ${/Type} === 'autonomo' ? ${i18n>lblCfi} : ${i18n>lblDni} }" />
+                                        <Input id="dni" value="{/Dni}"  valueState="{/DniState}" required="true" change="onValidateDNI" liveChange="additionalInfoValidation"/>
+                                        <Label text="{= ${/Type} === 'autonomo' ? ${i18n>lblDiario} : ${i18n>lblSalary} }" />
+                                        <VBox >
+                                            <Slider visible="{= ${/Type} === 'interno'}" 
+                                                    min="12000" max="80000" value="{/Salary}"
+                                                    step="1000" class="sapUiSmallMarginBottom"
+                                                    enableTickmarks="true"
+                                                    progress="true"
+                                                    showAdvancedTooltip="true">		
+                                                    <ResponsiveScale tickmarksBetweenLabels="50%" />	                                            
+                                            </Slider>                                        
+                                        <Slider visible="{= ${/Type} === 'gerente'}" 
+                                                min="50000" max="200000" value="{/Salary}"
+                                                step="1000" class="sapUiSmallMarginBottom"
+                                                    enableTickmarks="true"
+                                                    progress="false"
+                                                    showAdvancedTooltip="true">				
+                                            <ResponsiveScale tickmarksBetweenLabels="50%"/>
+                                        </Slider>
+                                        <Slider visible="{= ${/Type} === 'autonomo'}" 
+                                                min="100" max="2000" value="{/Salary}"
+                                                step="100" class="sapUiSmallMarginBottom"
+                                                    enableTickmarks="true"
+                                                    progress="false"
+                                                    showAdvancedTooltip="true">				
+                                            <ResponsiveScale tickmarksBetweenLabels="50%"/>
+                                        </Slider>
+                                        </VBox>
+                                        <Label text="{i18n>lblCreationDate}" />
+                                        <DatePicker  id="CreationDate" dateValue="{/CreationDate}" required="true" valueState="{/CreationDateState}" />
+                                    </f:content>
+                                </f:SimpleForm>
+                            </WizardStep>
+                            <WizardStep id="EmployeeInformationStep"
+										title="{i18n>titleInformationStep}"
+										validated="true">
+                                        <MessageStrip class="sapUiSmallMarginBottom"
+										text="{i18n>informationInformationStep}"
+										showIcon="true"/>
+                                        <Label text="{i18n>lblComment}"/>
+                                        <TextArea id="textAreaWithoutBinding" value="{/Comments}" showExceededText="true" maxLength="200" width="100%" />
+                                        <UploadCollection id="uploadCollection"
+                                            maximumFilenameLength="55"
+                                            maximumFileSize="10"
+                                            multiple="true"
+                                            sameFilenameAllowed="true"
+                                            instantUpload="true"
+                                            uploadUrl="/sap/opu/odata/sap/ZEMPLOYEES_SRV/Attachments"
+                                            change="onFileChange"
+                                            uploadComplete="onFileUploadComplete"
+                                            beforeUploadStarts="onFileBeforeUpload"
+                                            fileDeleted="onFileDeleted"
+                                            />                               
+                            </WizardStep>
+            </Wizard>
+        </content>
+        <footer>
+            <OverflowToolbar >
+                <ToolbarSpacer/>
+                <Button type="Reject" text="{i18n>btnCancel}">
+					<layoutData><OverflowToolbarLayoutData priority="NeverOverflow" /></layoutData>
+				</Button>
+            </OverflowToolbar>
+        </footer>
+    </Page>
+    <Page id="wizardReviewPage" showHeader="false">
+    <content>
+						<f:SimpleForm   id="formTypeEmployee"
+                            title="1. {i18n>titleTypeStep}"
+                            minWidth="1024"
+                            editable="false"
+                            layout="ResponsiveGridLayout">
+                            <f:content>
+                                <Label text="{i18n>lblType}"/>
+                                <Text id="reviewType" text="{/Type}"/>
+                                <Link press="editStepOne" text="Edit" />
+                            </f:content>
+                        </f:SimpleForm>
+
+						<f:SimpleForm
+								title="2. {i18n>titleDataStep}"
+								minWidth="1024"
+								editable="false"
+								layout="ResponsiveGridLayout">
+							<f:content>
+								<Label text="{i18n>lblName}"/>
+								<Text id="reviewName" text="{/FirstName}"/>
+								<Label text="{i18n>lblLastName}"/>
+								<Text id="reviewLastName" text="{/LastName}"/>
+								<Label text="{= ${/Type} === 'autonomo' ? ${i18n>lblCfi} : ${i18n>lblDni} }" />
+								<Text id="reviewDni" text="{/Dni}"/>
+								<Label text="{i18n>lblSalary}"/>
+								<Text id="reviewSalay" text="{/Salary}"/>
+                                <Label text="{i18n>lblCreationDate}"/>
+				                <Text  text="{path:'/CreationDate',type:'sap.ui.model.type.Date'}"/>
+								<Link press="editStepTwo" text="Edit" />
+							</f:content>
+						</f:SimpleForm>
+
+						<f:SimpleForm
+								title="3.{i18n>titleInformationStep}"
+								minWidth="1024"
+								editable="false"
+								layout="ResponsiveGridLayout">
+							<f:content>
+								<Label text="{i18n>lblComment}"/>
+								<Text text="{/Comments}"/>
+								<Label text="{i18n>lblDocuments}"/>
+								<Label></Label>
+                                <List items="{/_files}">
+                                    <items>
+                                        <StandardListItem title="{DocName}"></StandardListItem>
+                                    </items>
+                                </List>
+								<Link press="editStepThree" text="Edit" />
+							</f:content>
+						</f:SimpleForm>
+						
+					</content>
+					<footer>
+						<Bar>
+							<contentRight>
+								<Button text="{i18n>bntSave}" press="handleWizardSubmit"/>
+								<Button text="{i18n>bntCancel}" press="handleWizardCancel"/>
+							</contentRight>
+						</Bar>
+					</footer>
+    </Page>
+    	</pages>
+		</NavContainer>
+</mvc:View>
